@@ -20,10 +20,13 @@ const getRealWidth = (node: HTMLElement): React.CSSProperties => ({
   transform: 'scale(1)',
 });
 
+// loading 状态下 icon 的处理
 const LoadingIcon: React.FC<LoadingIconProps> = ({ prefixCls, loading, existIcon }) => {
   const visible = !!loading;
 
   if (existIcon) {
+    // 原本就存在 icon
+    // 直接返回 <LoadingOutlined /> 图标
     return (
       <span className={`${prefixCls}-loading-icon`}>
         <LoadingOutlined />
@@ -31,6 +34,7 @@ const LoadingIcon: React.FC<LoadingIconProps> = ({ prefixCls, loading, existIcon
     );
   }
 
+  // 原本不存在 icon
   return (
     <CSSMotion
       visible={visible}

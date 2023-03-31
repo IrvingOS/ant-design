@@ -4,6 +4,7 @@ type throttledFn = (...args: any[]) => void;
 
 type throttledCancelFn = { cancel: () => void };
 
+// 按动画帧节流
 function throttleByAnimationFrame<T extends any[]>(fn: (...args: T) => void) {
   let requestId: number | null;
 

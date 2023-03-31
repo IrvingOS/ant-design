@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import * as React from 'react';
+import warning from '../_util/warning';
 import { ConfigContext } from '../config-provider';
 import type { SizeType } from '../config-provider/SizeContext';
 import { useToken } from '../theme/internal';
-import warning from '../_util/warning';
 
 export interface ButtonGroupProps {
   size?: SizeType;
@@ -13,6 +13,7 @@ export interface ButtonGroupProps {
   children?: React.ReactNode;
 }
 
+// group size 上下文
 export const GroupSizeContext = React.createContext<SizeType | undefined>(undefined);
 
 const ButtonGroup: React.FC<ButtonGroupProps> = (props) => {
@@ -25,6 +26,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = (props) => {
 
   let sizeCls = '';
 
+  // 解析 size classname
   switch (size) {
     case 'large':
       sizeCls = 'lg';
@@ -39,6 +41,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = (props) => {
       warning(!size, 'Button.Group', 'Invalid prop `size`.');
   }
 
+  // 组织 group 的类名
   const classes = classNames(
     prefixCls,
     {
@@ -50,6 +53,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = (props) => {
   );
 
   return (
+    // 将 Group 组件参数 size 绑定在 GroupSizeContext 上下文
     <GroupSizeContext.Provider value={size}>
       <div {...others} className={classes} />
     </GroupSizeContext.Provider>

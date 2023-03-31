@@ -1,11 +1,11 @@
-import * as React from 'react';
 import type { DerivativeFunc } from '@ant-design/cssinjs';
+import * as React from 'react';
 import type { Options } from 'scroll-into-view-if-needed';
 import type { RequiredMark } from '../form/Form';
 import type { Locale } from '../locale';
 import type { AliasToken, MapToken, OverrideToken, SeedToken } from '../theme/interface';
-import type { RenderEmptyHandler } from './defaultRenderEmpty';
 import type { SizeType } from './SizeContext';
+import type { RenderEmptyHandler } from './defaultRenderEmpty';
 
 export const defaultIconPrefixCls = 'anticon';
 
@@ -70,6 +70,7 @@ export interface ConfigConsumerProps {
   };
 }
 
+// 获取 css 类名前缀
 const defaultGetPrefixCls = (suffixCls?: string, customizePrefixCls?: string) => {
   if (customizePrefixCls) return customizePrefixCls;
 

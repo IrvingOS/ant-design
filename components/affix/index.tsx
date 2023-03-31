@@ -70,6 +70,7 @@ class InternalAffix extends React.Component<InternalAffixProps, AffixState> {
 
   context: ConfigConsumerProps;
 
+  // 获取需要监听滚动事件的元素
   private getTargetFunc() {
     const { getTargetContainer } = this.context;
     const { target } = this.props;
@@ -78,6 +79,7 @@ class InternalAffix extends React.Component<InternalAffixProps, AffixState> {
       return target;
     }
 
+    // 如果没有任何配置，最终返回 window 对象
     return getTargetContainer ?? getDefaultTarget;
   }
 

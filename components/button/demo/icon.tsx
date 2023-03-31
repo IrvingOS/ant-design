@@ -1,6 +1,6 @@
-import React from 'react';
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Space } from 'antd';
+import { Button, Space, Tooltip } from 'antd';
+import React from 'react';
 
 const App: React.FC = () => (
   <Space direction="vertical">
@@ -11,8 +11,12 @@ const App: React.FC = () => (
       <Button type="primary" shape="circle">
         A
       </Button>
-      <Button type="primary" icon={<SearchOutlined />}>
-        Search
+      {/* TODO 此时同时存在 loading 图标和 <SearchOutlined /> 图标，对 loading 的处理没有适配这种情况 */}
+      <Button type="primary" loading>
+        <SearchOutlined /> SearchWithButtonChild
+      </Button>
+      <Button type="primary" loading>
+        <SearchOutlined /> 1
       </Button>
       <Tooltip title="search">
         <Button shape="circle" icon={<SearchOutlined />} />
