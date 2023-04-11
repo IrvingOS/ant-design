@@ -18,10 +18,12 @@ export function replaceElement(
   if (!isValidElement(element)) {
     return replacement;
   }
-  return React.cloneElement(
+  const result = React.cloneElement(
     element,
     typeof props === 'function' ? props(element.props || {}) : props,
   );
+  // console.log(element, result);
+  return result;
 }
 
 export function cloneElement(element: React.ReactNode, props?: RenderProps): React.ReactElement {

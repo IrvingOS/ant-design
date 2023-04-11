@@ -311,6 +311,7 @@ const InternalButton: React.ForwardRefRenderFunction<
   // 波纹处理：点击后 border 外会有一圈波纹
   if (!isUnBorderedButtonType(type)) {
     buttonNode = <Wave disabled={!!innerLoading}>{buttonNode}</Wave>;
+    // console.log(buttonNode);
   }
 
   return wrapSSR(buttonNode);

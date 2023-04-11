@@ -52,7 +52,6 @@ export function spaceChildren(children: React.ReactNode, needInserted: boolean) 
   // React.Children.forEach 遍历 children
   React.Children.forEach(children, (child) => {
     const type = typeof child;
-    console.log(child, type);
     // 是否是普通的 child，类型为 string || number
     // 如果 child 是文本，则是普通的 child
     const isCurrentChildPure = type === 'string' || type === 'number';

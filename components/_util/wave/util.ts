@@ -7,6 +7,8 @@ export function isNotGrey(color: string) {
   return true;
 }
 
+// 判断 color 是否是有效的 Wave 颜色
+// 如果 color 是纯白、灰色、透明或者无效 rgba，则不能作为 Wave 颜色
 export function isValidWaveColor(color: string) {
   return (
     color &&
@@ -20,7 +22,12 @@ export function isValidWaveColor(color: string) {
   );
 }
 
+// 获取目标 波纹 颜色
 export function getTargetWaveColor(node: HTMLElement) {
+  // borderTopColor: 目标元素顶部 border 的颜色
+  // borderColor: 目标元素 border 的颜色
+  // backgroundColor: 目标元素背景的颜色
+  // 分别测试这几个颜色，看能否作为 Wave 颜色
   const { borderTopColor, borderColor, backgroundColor } = getComputedStyle(node);
   if (isValidWaveColor(borderTopColor)) {
     return borderTopColor;
