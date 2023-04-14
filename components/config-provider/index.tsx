@@ -7,6 +7,7 @@ import useMemo from 'rc-util/lib/hooks/useMemo';
 import type { ReactElement } from 'react';
 import * as React from 'react';
 import type { Options } from 'scroll-into-view-if-needed';
+import warning from '../_util/warning';
 import type { RequiredMark } from '../form/Form';
 import type { Locale } from '../locale';
 import LocaleProvider, { ANT_MARK } from '../locale';
@@ -15,7 +16,6 @@ import LocaleContext from '../locale/context';
 import defaultLocale from '../locale/en_US';
 import { DesignTokenContext } from '../theme/internal';
 import defaultSeedToken from '../theme/themes/seed';
-import warning from '../_util/warning';
 import type { ConfigConsumerProps, CSPConfig, DirectionType, Theme, ThemeConfig } from './context';
 import { ConfigConsumer, ConfigContext, defaultIconPrefixCls } from './context';
 import { registerTheme } from './cssVariables';
@@ -83,11 +83,14 @@ const PASSED_PROPS: Exclude<keyof ConfigConsumerProps, 'rootPrefixCls' | 'getPre
 export interface ConfigProviderProps {
   getTargetContainer?: () => HTMLElement | Window;
   getPopupContainer?: (triggerNode?: HTMLElement) => HTMLElement;
+  // classname 前缀
   prefixCls?: string;
+  // icon classname 前缀
   iconPrefixCls?: string;
   children?: React.ReactNode;
   renderEmpty?: RenderEmptyHandler;
   csp?: CSPConfig;
+  // 是否自动在两个汉字的按钮文字间插入空格
   autoInsertSpaceInButton?: boolean;
   form?: {
     validateMessages?: ValidateMessages;
@@ -104,18 +107,23 @@ export interface ConfigProviderProps {
   pagination?: {
     showSizeChanger?: boolean;
   };
+  // 本地化
   locale?: Locale;
   pageHeader?: {
     ghost: boolean;
   };
+  // 组件大小
   componentSize?: SizeType;
   componentDisabled?: boolean;
+  // 内容展示的方向：从左到右 or 从右到左？
   direction?: DirectionType;
+  // 紧凑型 or 松散型？
   space?: {
     size?: SizeType | number;
   };
   virtual?: boolean;
   dropdownMatchSelectWidth?: boolean;
+  // 主题
   theme?: ThemeConfig;
 }
 
@@ -124,6 +132,7 @@ interface ProviderChildrenProps extends ConfigProviderProps {
   legacyLocale: Locale;
 }
 
+// classname 前缀
 export const defaultPrefixCls = 'ant';
 let globalPrefixCls: string;
 let globalIconPrefixCls: string;
@@ -141,6 +150,8 @@ const setGlobalConfig = ({
   iconPrefixCls,
   theme,
 }: Pick<ConfigProviderProps, 'prefixCls' | 'iconPrefixCls'> & { theme?: Theme }) => {
+  // globalPrefixCls、globalIconPrefixCls 这两个参数采用全局变量的形式
+  // 在 setGlobalConfig 修改这两个参数后，不会重新渲染
   if (prefixCls !== undefined) {
     globalPrefixCls = prefixCls;
   }
@@ -148,6 +159,7 @@ const setGlobalConfig = ({
     globalIconPrefixCls = iconPrefixCls;
   }
 
+  // 但是，当 theme 修改后，会调用 registerTheme 注册主题并触发重新渲染
   if (theme) {
     registerTheme(getGlobalPrefixCls(), theme);
   }
@@ -170,6 +182,7 @@ export const globalConfig = () => ({
   },
 });
 
+// 消费者
 const ProviderChildren: React.FC<ProviderChildrenProps> = (props) => {
   const {
     children,
@@ -189,6 +202,7 @@ const ProviderChildren: React.FC<ProviderChildrenProps> = (props) => {
     componentDisabled,
   } = props;
 
+  // classname 前缀
   const getPrefixCls = React.useCallback(
     (suffixCls: string, customizePrefixCls?: string) => {
       const { prefixCls } = props;
@@ -202,18 +216,23 @@ const ProviderChildren: React.FC<ProviderChildrenProps> = (props) => {
     [parentContext.getPrefixCls, props.prefixCls],
   );
 
+  // 参数准备
+  // icon classname 前缀
   const iconPrefixCls = customIconPrefixCls || parentContext.iconPrefixCls || defaultIconPrefixCls;
+  // 是否要重新渲染
   const shouldWrapSSR = iconPrefixCls !== parentContext.iconPrefixCls;
   const csp = customCsp || parentContext.csp;
 
   const wrapSSR = useStyle(iconPrefixCls, csp);
 
+  // 合并参数中的主题和上下文中的主题
   const mergedTheme = useTheme(theme, parentContext.theme);
 
   if (process.env.NODE_ENV !== 'production') {
     existThemeConfig = existThemeConfig || !!mergedTheme;
   }
 
+  // 基础配置
   const baseConfig = {
     csp,
     autoInsertSpaceInButton,
@@ -227,16 +246,19 @@ const ProviderChildren: React.FC<ProviderChildrenProps> = (props) => {
     theme: mergedTheme,
   };
 
+  // 扩展的配置
   const config = {
     ...parentContext,
   };
 
+  // 合并基础配置
   Object.keys(baseConfig).forEach((key: keyof typeof baseConfig) => {
     if (baseConfig[key] !== undefined) {
       (config as any)[key] = baseConfig[key];
     }
   });
 
+  // 不需要处理的配置，直接合并过来
   // Pass the props used by `useContext` directly with child component.
   // These props should merged into `config`.
   PASSED_PROPS.forEach((propName) => {
@@ -246,10 +268,12 @@ const ProviderChildren: React.FC<ProviderChildrenProps> = (props) => {
     }
   });
 
+  // 缓存后的配置
   // https://github.com/ant-design/ant-design/issues/27617
   const memoedConfig = useMemo(
     () => config,
     config,
+    // 配置 shouldUpdate？
     (prevConfig, currentConfig) => {
       const prevKeys = Object.keys(prevConfig) as Array<keyof typeof config>;
       const currentKeys = Object.keys(currentConfig) as Array<keyof typeof config>;
@@ -260,11 +284,14 @@ const ProviderChildren: React.FC<ProviderChildrenProps> = (props) => {
     },
   );
 
+  // 缓存后的 icon 上下文
   const memoIconContextValue = React.useMemo(
     () => ({ prefixCls: iconPrefixCls, csp }),
     [iconPrefixCls, csp],
   );
 
+  // 真正的子节点
+  // 如果 classname 前缀与上下文中的不同需要重新渲染则重新渲染
   let childNode = shouldWrapSSR ? wrapSSR(children as ReactElement) : children;
 
   const validateMessages = React.useMemo(
@@ -279,7 +306,7 @@ const ProviderChildren: React.FC<ProviderChildrenProps> = (props) => {
   );
 
   if (Object.keys(validateMessages).length > 0) {
-    childNode = <RcFormProvider validateMessages={validateMessages}>{children}</RcFormProvider>;
+    childNode = <RcFormProvider validateMessages={validateMessages}>{}</RcFormProvider>;
   }
 
   if (locale) {
@@ -343,14 +370,20 @@ const ConfigProvider: React.FC<ConfigProviderProps> & {
   config: typeof setGlobalConfig;
   useConfig: typeof useConfig;
 } = (props) => {
+  // 消费者配置上下文
   const context = React.useContext<ConfigConsumerProps>(ConfigContext);
+  // 本地化上下文
   const antLocale = React.useContext<LocaleContextProps | undefined>(LocaleContext);
   return <ProviderChildren parentContext={context} legacyLocale={antLocale!} {...props} />;
 };
 
+// ConfigContext
 ConfigProvider.ConfigContext = ConfigContext;
+// SizeContext
 ConfigProvider.SizeContext = SizeContext;
+// setGlobalConfig
 ConfigProvider.config = setGlobalConfig;
+// useConfig
 ConfigProvider.useConfig = useConfig;
 
 Object.defineProperty(ConfigProvider, 'SizeContext', {

@@ -1,14 +1,13 @@
-import * as React from 'react';
-import { FormattedMessage, Link, useFullSidebarData, useLocation } from 'dumi';
-import type { MenuProps } from 'antd';
-import { Menu } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { getEcosystemGroup } from './More';
-import * as utils from '../../utils';
-import type { SharedProps } from './interface';
-import useSiteToken from '../../../hooks/useSiteToken';
+import type { MenuProps } from 'antd';
+import { Menu } from 'antd';
+import { FormattedMessage, Link, useFullSidebarData, useLocation } from 'dumi';
 import useLocale from '../../../hooks/useLocale';
+import useSiteToken from '../../../hooks/useSiteToken';
+import * as utils from '../../utils';
+import { getEcosystemGroup } from './More';
+import type { SharedProps } from './interface';
 
 // ============================= Theme =============================
 const locales = {
@@ -119,6 +118,10 @@ export default ({
   const [locale] = useLocale(locales);
 
   const sidebarData = useFullSidebarData();
+  // title: Tree 的勾选传导
+  // date: 2022-12-14
+  // author: zombieJ
+  // 这是每篇 blog 的头部信息，blogList 就是根据 date 进行倒序排列后的 blog 列表
   const blogList = sidebarData['/docs/blog']?.[0]?.children || [];
 
   const style = useStyle();
@@ -139,6 +142,7 @@ export default ({
 
   let additional: MenuProps['items'];
 
+  // 更多 下拉选择框
   const additionalItems: MenuProps['items'] = [
     {
       label: (
@@ -177,6 +181,7 @@ export default ({
     ];
   }
 
+  // 导航菜单项
   const items: MenuProps['items'] = [
     {
       label: (

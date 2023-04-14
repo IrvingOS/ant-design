@@ -150,6 +150,7 @@ export function getLocalizedPathname(
   return { pathname: fullPath, search };
 }
 
+// 一个非常严谨的 ping
 export function ping(callback: (status: string) => void) {
   const url =
     'https://private-a' +
@@ -158,6 +159,7 @@ export function ping(callback: (status: string) => void) {
     'ay.com/alip' +
     'ay-rmsdeploy-image/rmsportal/RKuAiriJqrUhyqW.png';
   const img = new Image();
+  // 回调函数只会执行一次
   let done: boolean;
   const finish = (status: string) => {
     if (!done) {
@@ -172,6 +174,7 @@ export function ping(callback: (status: string) => void) {
   return setTimeout(() => finish('timeout'), 1500);
 }
 
+// LocalStorage 是否可用
 export function isLocalStorageNameSupported() {
   const testKey = 'test';
   const storage = window.localStorage;
@@ -184,6 +187,7 @@ export function isLocalStorageNameSupported() {
   }
 }
 
+// 加载 js
 export function loadScript(src: string) {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');

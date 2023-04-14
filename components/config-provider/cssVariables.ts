@@ -95,6 +95,11 @@ export function getStyle(globalPrefixCls: string, theme: Theme) {
 export function registerTheme(globalPrefixCls: string, theme: Theme) {
   const style = getStyle(globalPrefixCls, theme);
 
+  // !!(
+  //    typeof window !== 'undefined' &&
+  //    window.document &&
+  //    window.document.createElement
+  // );
   if (canUseDom()) {
     updateCSS(style, `${dynamicStyleMark}-dynamic-theme`);
   } else {

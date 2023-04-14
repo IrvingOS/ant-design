@@ -96,6 +96,7 @@ const Wave: React.FC<WaveProps> = (props) => {
   // 这个新的节点就是 <Wave /> 包装过的节点
   // containerRef 会作为新节点的 ref 参数传递，其指向该新节点
   // 在点击新的节点时，触发 onClick 事件，其调用 useWave hook，在其中 nodeRef.current 就能引用到该节点
+  // ===> 相当于装饰器模式
   return cloneElement(children, { ref });
 };
 

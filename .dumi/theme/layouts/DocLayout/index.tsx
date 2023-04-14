@@ -1,23 +1,25 @@
-import React, { useContext, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
-import 'dayjs/locale/zh-cn';
-import dayjs from 'dayjs';
-import { Helmet, useOutlet, useSiteData } from 'dumi';
-import '../../static/style';
 import ConfigProvider from 'antd/es/config-provider';
-import classNames from 'classnames';
 import zhCN from 'antd/es/locale/zh_CN';
-import SiteContext from '../../slots/SiteContext';
-import Header from '../../slots/Header';
-import Footer from '../../slots/Footer';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+import { Helmet, useOutlet, useSiteData } from 'dumi';
+import React, { useContext, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import useLocale from '../../../hooks/useLocale';
 import useLocation from '../../../hooks/useLocation';
-import ResourceLayout from '../ResourceLayout';
 import GlobalStyles from '../../common/GlobalStyles';
+import Footer from '../../slots/Footer';
+import Header from '../../slots/Header';
+import SiteContext from '../../slots/SiteContext';
+import '../../static/style';
+import ResourceLayout from '../ResourceLayout';
 import SidebarLayout from '../SidebarLayout';
 
 const locales = {
   cn: {
+    // 标签页名称
     title: 'Ant Design - 一套企业级 UI 设计语言和 React 组件库',
+    // meta 标签内容
     description: '基于 Ant Design 设计体系的 React UI 组件库，用于研发企业级中后台产品。',
   },
   en: {
@@ -28,6 +30,7 @@ const locales = {
 };
 
 const DocLayout: React.FC = () => {
+  // dumi 文档内容解析
   const outlet = useOutlet();
   const location = useLocation();
   const { pathname, search, hash } = location;

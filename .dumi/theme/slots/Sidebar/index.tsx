@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
-import { useSidebarData } from 'dumi';
-import { Col, ConfigProvider, Menu } from 'antd';
-import MobileMenu from 'rc-drawer';
 import { css } from '@emotion/react';
-import SiteContext from '../SiteContext';
+import { Col, ConfigProvider, Menu } from 'antd';
+import { useSidebarData } from 'dumi';
+import MobileMenu from 'rc-drawer';
+import React, { useContext } from 'react';
 import useMenu from '../../../hooks/useMenu';
 import useSiteToken from '../../../hooks/useSiteToken';
+import SiteContext from '../SiteContext';
 
 const useStyle = () => {
   const { token } = useSiteToken();
@@ -122,6 +122,7 @@ const useStyle = () => {
   };
 };
 
+// 左边栏
 const Sidebar: React.FC = () => {
   const sidebarData = useSidebarData();
   const { isMobile, theme } = useContext(SiteContext);
